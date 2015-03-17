@@ -1,0 +1,15 @@
+app.db
+venv
+build
+dist
+__pycache__
+
+# python specific
+*.pyc
+.coverage
+nosetests.xml
+
+# vim swp files
+*.swp
+*.swo
+*~

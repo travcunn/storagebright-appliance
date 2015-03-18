@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timedelta
 
 from flask import flash, g, redirect, render_template, request, session, \
     url_for
@@ -7,9 +8,7 @@ from flask.ext.login import current_user, login_required, login_user, \
 from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
-from app.forms import BarkForm, LoginChecker, LoginForm, EmailForm, \
-    RegistrationForm, ResetPWChecker, ResetPasswordForm, \
-    FollowForm
+from app.forms import LoginChecker, LoginForm
 from app.models import Backup, User
 
 
@@ -27,7 +26,10 @@ def index():
 def backups():
     """Route for the backups page."""
 
-    return render_template('backups.html', title='Backups')
+    all_backups = Backup.query.all()
+
+    return render_template('backups.html', title='Backups',
+                           all_backups=all_backups)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -75,3 +77,31 @@ def before_request():
 def load_user(user_id):
     """Returns a user, given a user id."""
     return User.query.get(int(user_id))
+
+
+@app.template_filter('time_interval')
+def time_interval(hours):
+    """
+    Returns string representing "time interval" e.g.
+    Every 3 days, Every 5 hours, etc...
+    """
+
+    delta = timedelta(hours=hours)
+
+    periods = (
+        (delta.days / 365, "year", "years"),
+        (delta.days / 30, "month", "months"),
+        (delta.days / 7, "week", "weeks"),
+        (delta.days, "day", "days"),
+        (delta.seconds / 3600, "hour", "hours"),
+        (delta.seconds / 60, "minute", "minutes"),
+        (delta.seconds, "second", "seconds"),
+    )
+
+    for period, singular, plural in periods:
+        if period:
+            if period == 1:
+                return "Every %s" % (singular,)
+            else:
+                return "Every %d %s" % \
+                    (period, singular if period == 1 else plural)

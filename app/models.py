@@ -47,10 +47,7 @@ class Backup(db.Model):
 
     class PROTOCOL():
         """ Enumeration of backup server protocols. """
-        SMB = {
-            'id': 1,
-            'name': 'SMB',
-        }
+        SMB = 1
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
@@ -65,12 +62,19 @@ class Backup(db.Model):
     status = db.Column(db.Integer)
     error_message = db.Column(db.String(512))
 
-    def __init__(self):
+    def __init__(self, name, server, port, protocol, location, start_time,
+                 interval):
+        self.name = name
+        self.server = server
+        self.port = port
+        self.protocol = protocol
+        self.location = location
+        self.start_time = start_time
+        self.interval = interval
+
+        # Default properties of a new Backup
         self.status = self.STATUS.NEVER_STARTED
         self.error_message = ''
-
-    def get_schedule_text(self):
-        pass
 
     def finished(self):
         """ Called when a backup has finished successfully. """

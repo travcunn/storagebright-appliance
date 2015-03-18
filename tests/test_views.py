@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 import string
@@ -397,7 +398,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         super(EditBackupTestCase, self).setUp()
 
         # New Backup object for each test
-        self.new_backup = Backup()
+        self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
+                                 port=445, protocol=Backup.PROTOCOL.SMB,
+                                 location='F:/teachers',
+                                 start_time=datetime.datetime.now(),
+                                 interval=24)
 
         db.session.add(self.new_backup)
         db.session.commit()
@@ -746,7 +751,11 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         super(EditBackupTestCase, self).setUp()
 
         # New Backup object for each test
-        self.new_backup = Backup()
+        self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
+                                 port=445, protocol=Backup.PROTOCOL.SMB,
+                                 location='F:/teachers',
+                                 start_time=datetime.datetime.now(),
+                                 interval=24)
 
         db.session.add(self.new_backup)
         db.session.commit()
@@ -785,6 +794,81 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         assert resp.status_code == 404
         
         assert Backup.query.count() == 1
+
+
+class ViewBackupTestCase(BaseAuthenticatedTestCase):
+    """ Test viewing backup jobs. """
+
+    def setUp(self):
+        super(ViewBackupTestCase, self).setUp()
+ 
+    def tearDown(self):
+        super(ViewBackupTestCase, self).tearDown()
+
+        Backup.query.delete()
+        db.session.commit()
+
+    def test_view_backups_list(self):
+        """ Test viewing the list of all backups. """
+
+        # Create 3 backups
+        new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
+                              port=445, protocol=Backup.PROTOCOL.SMB,
+                              location='F:/teachers',
+                              start_time=datetime.datetime.now(), interval=24)
+        db.session.add(new_backup_1)
+
+        new_backup_2 = Backup(name='Students Backup', server='winshare01', 
+                              port=445, protocol=Backup.PROTOCOL.SMB,
+                              location='F:/students',
+                              start_time=datetime.datetime.now(), interval=24)
+        db.session.add(new_backup_2)
+
+        new_backup_3 = Backup(name='Admin Backup', server='winshare01', 
+                              port=445, protocol=Backup.PROTOCOL.SMB,
+                              location='F:/admin',
+                              start_time=datetime.datetime.now(), interval=24)
+        db.session.add(new_backup_3)
+
+        # Save changes to the database
+        db.session.commit()
+
+        resp = self.app.get('/backups', follow_redirects=True)
+        assert resp.status_code == 200
+
+        for backup in Backup.query.all():
+            assert backup.name in resp.data
+            assert backup.location in resp.data
+
+    def test_view_backups_list_empty(self):
+        """ Test viewing the list of all backups, although it is empty. """
+
+        resp = self.app.get('/backups', follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'To get started, schedule a backup task.' in resp.data
+
+    def test_view_single_backup(self):
+        """ Test viewing a single backup. """
+
+        # Create 3 backups
+        new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
+                              port=445, protocol=Backup.PROTOCOL.SMB,
+                              location='F:/teachers',
+                              start_time=datetime.datetime.now(), interval=24)
+        db.session.add(new_backup_1)
+
+        # Save changes to the database
+        db.session.commit()
+
+        view_url = '/backups/view/{}'.format(new_backup_1.id)
+
+        resp = self.app.get(view_url, follow_redirects=True)
+        assert resp.status_code == 200
+
+        for backup in Backup.query.all():
+            assert backup.name in resp.data
+            assert backup.location in resp.data
+            assert backup.last_backup in resp.data
 
 
 if __name__ == '__main__':

@@ -56,6 +56,7 @@ class Backup(db.Model):
 
     def __init__(self):
         self.status = self.STATUS.NEVER_STARTED
+        self.error_message = ''
 
     def get_schedule_text(self):
         pass
@@ -74,6 +75,7 @@ class Backup(db.Model):
     def started(self):
         """ Called when a backup has started. """
         self.status = self.STATUS.RUNNING
+        self.error_message = ''
 
 
     def __repr__(self):

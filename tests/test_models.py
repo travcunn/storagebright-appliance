@@ -29,7 +29,6 @@ class BackupModelTestCase(BaseTestCase):
     """
     Test the Backup database model.
     """
-
     def test_backup_failure(self):
         b = Backup()
         b.failed("Something has gone wrong.")
@@ -48,10 +47,12 @@ class BackupModelTestCase(BaseTestCase):
         b = Backup()
         b.started()
         assert b.status == Backup.STATUS.RUNNING
+        assert b.error_message == ''
 
     def test_backup_never_started(self):
         b = Backup()
         assert b.status == Backup.STATUS.NEVER_STARTED
+        assert b.error_message == ''
 
 
 if __name__ == '__main__':

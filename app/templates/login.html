@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Login | Dragon Backups Appliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/static/css/jasny-bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="/static/css/bootswatch.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/html5shiv.js"></script>
+      <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    
+<div class="container">
+  
+  <div class="row" id="pwd-container">
+    <div class="col-md-4"></div>
+    
+    <div class="col-md-4">
+      <section class="login-form">
+         <form role="login" method="post" action="">
+          {{ form.hidden_tag() }}
+
+          <img src="http://i.imgur.com/RcmcLv4.png" class="img-responsive" alt="" />
+          
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="top-error">
+            {% for category, message in messages %}
+              <div class="alert alert-dismissable alert{% if category != 'message'%}-{{ category }}{% endif %}{% if category == 'message' %}-warning{% endif %}">
+              <strong class="top-error-text">{{ message }}</strong>
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+          {% endwith %}
+
+          {{ form.email(class="form-control input-lg", placeholder="Email", type="email", required="") }}
+          {% for error in form.email.errors %}
+            <span class='invalid'>[{{ error }}]</span>
+          {% endfor %}
+
+          {{ form.password(class="form-control input-lg", placeholder="Password", required="") }}
+          {% for error in form.password.errors %}
+            <span class='invalid'>[{{ error }}]</span>
+          {% endfor %}
+          
+          <div class="pwstrength_viewport_progress"></div>
+          
+          <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
+        </form>
+        
+        <div class="form-links">
+          <a href="https://dragonbackups.com/support">dragonbackups.com/support</a>
+        </div>
+      </section>  
+      </div>
+      
+      <div class="col-md-4"></div>
+
+  </div>
+  
+</div>
+
+    <script src="/static/js/jquery-1.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <script src="/static/js/bootswatch.js"></script>
+
+  </body>
+</html>

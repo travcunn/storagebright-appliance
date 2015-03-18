@@ -1,3 +1,6 @@
+import datetime
+
+from app import bcrypt
 from app import db
 
 
@@ -7,20 +10,13 @@ class User(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    firstName = db.Column(db.String(80))
-    lastName = db.Column(db.String(80))
     password = db.Column(db.String(20))
-    securityQuestion1 = db.Column(db.String(100))
-    securityAnswer1 = db.Column(db.String(30))
-    securityQuestion2 = db.Column(db.String(100))
-    securityAnswer2 = db.Column(db.String(30))
-    securityQuestion3 = db.Column(db.String(100))
-    securityAnswer3 = db.Column(db.String(30))
 
-    
-    #  adds relationship between User and Barks so a user's barks can be displayed
-    barks = db.relationship('Bark', backref='author', lazy='dynamic')
-        
+    def set_password(self, password):
+        """ Sets the passwrod for a user. """
+        pw_hash = bcrypt.generate_password_hash(password)
+        self.password = pw_hash
+
     def is_authenticated(self):
         """ Returns authentication status of a user. """
         return True
@@ -30,31 +26,55 @@ class User(db.Model):
         return True
 
     def get_id(self):
-        """ Rreturns the id of a user. """
+        """ Returns the id of a user. """
         return unicode(self.id)
 
     def __repr__(self):
         return '<User %r>' % (self.email)
  
 
-class Bark(db.Model):
+class Backup(db.Model):
     """
-    Bark class for collection of barks in the feed.
+    Backup model that represents the backup job.
     """
+
+    class STATUS():
+        RUNNING = 1
+        FINISHED = 2
+        ERROR = 3
+        NEVER_STARTED = 4
+
     id = db.Column(db.Integer, primary_key=True)
-    barkBody = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime)
-    #  adds foreign key to tie each bark to a user
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(140))
+    location = db.Column(db.String(512))
+    start_time = db.Column(db.DateTime)
+    # Interval in hours
+    interval = db.Column(db.Integer)
+    last_backup = db.Column(db.DateTime)
+    status = db.Column(db.Integer)
+    error_message = db.Column(db.String(512))
+
+    def __init__(self):
+        self.status = self.STATUS.NEVER_STARTED
+
+    def get_schedule_text(self):
+        pass
+
+    def finished(self):
+        """ Called when a backup has finished successfully. """
+        self.last_backup = datetime.datetime.now()
+        self.status = self.STATUS.FINISHED
+        self.error_message = ''
+
+    def failed(self, error_message):
+        """ Called when a backup has failed. """
+        self.status = self.STATUS.ERROR
+        self.error_message = error_message
+
+    def started(self):
+        """ Called when a backup has started. """
+        self.status = self.STATUS.RUNNING
+
 
     def __repr__(self):
-        return '<Bark %r>' % (self.barkBody)
-
-
-class Friendship(db.Model):
-    """
-    Friendship class representing relationships between users.
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    friend_id = db.Column(db.Integer)
+        return '<Backup %r>' % (self.name)

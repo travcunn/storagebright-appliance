@@ -8,7 +8,7 @@ run:
 	python run.py
 
 test:
-	py.test tests.py
+	py.test
 
 install:
 	pip install -r requirements.txt

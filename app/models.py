@@ -39,13 +39,24 @@ class Backup(db.Model):
     """
 
     class STATUS():
+        """ Enumeration of backup status. """
         RUNNING = 1
         FINISHED = 2
         ERROR = 3
         NEVER_STARTED = 4
 
+    class PROTOCOL():
+        """ Enumeration of backup server protocols. """
+        SMB = {
+            'id': 1,
+            'name': 'SMB',
+        }
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
+    server = db.Column(db.String(256))
+    port = db.Column(db.Integer)
+    protocol = db.Column(db.Integer)
     location = db.Column(db.String(512))
     start_time = db.Column(db.DateTime)
     # Interval in hours

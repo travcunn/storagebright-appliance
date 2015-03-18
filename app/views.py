@@ -22,7 +22,7 @@ def index():
     return redirect(url_for('login'))
 
 
-@app.route('/home/backups', methods=['GET', 'POST'])
+@app.route('/backups', methods=['GET', 'POST'])
 @login_required
 def backups():
     """Route for the backups page."""

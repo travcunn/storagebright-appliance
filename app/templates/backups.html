@@ -13,9 +13,16 @@
   </div>
   <div class="navbar-collapse collapse" id="navbar-main">
     <ul class="nav navbar-nav">
-      <li class="active">
-        <a href="/backups">Backups</a>
+
+      <li class="dropdown active">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Backups <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/backups">View All</a></li>
+            <li class="divider"></li>
+            <li><a href="/backups/new">Add New Backup</a></li>
+          </ul>
       </li>
+
       <li>
         <a href="/restore">Restore</a>
       </li>

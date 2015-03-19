@@ -8,7 +8,7 @@ from flask.ext.login import current_user, login_required, login_user, \
 from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
-from app.forms import LoginChecker, LoginForm
+from app.forms import BackupForm, LoginChecker, LoginForm
 from app.models import Backup, User
 
 
@@ -30,6 +30,31 @@ def backups():
 
     return render_template('backups.html', title='Backups',
                            all_backups=all_backups)
+
+
+@app.route('/backups/new', methods=['GET', 'POST'])
+@login_required
+def new_backup():
+    """Route for the new backup page."""
+
+    form = BackupForm(request.form)
+
+    if form.validate_on_submit():
+        new_backup = Backup(name=form.name.data, server=form.server.data,
+                            port=form.port.data, protocol=form.protocol.data,
+                            location=form.location.data,
+                            start_time=form.start_time.data,
+                            start_day=form.start_day.data,
+                            interval=form.interval.data)
+
+        db.session.add(new_backup)
+        db.session.commit()
+
+        flash("Backup task was created successfully.", "success")
+        return redirect(url_for('index'))
+
+    return render_template('new-backup.html', title='New Backup',
+                           form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

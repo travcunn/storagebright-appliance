@@ -1,4 +1,3 @@
-import datetime
 import os
 import random
 import string
@@ -166,9 +165,11 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -180,15 +181,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The backup name was not specified.' in resp.data
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_missing_server_setting(self):
         """ Test creating a new backup job with missing server setting. """
@@ -196,15 +199,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The server address was not specified.' in resp.data
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_missing_port_setting(self):
         """ Test creating a new backup job with missing port setting. """
@@ -212,15 +217,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The server port was not specified.' in resp.data
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_missing_protocol_setting(self):
         """ Test creating a new backup job with missing protocol setting. """
@@ -229,14 +236,16 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The server protocol was not specified.' in resp.data
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_missing_start_time_setting(self):
         """
@@ -247,14 +256,36 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The start time was not specified.' in resp.data
+        assert 'This field is required' in resp.data
+
+    def test_create_backup_with_missing_start_date_setting(self):
+        """
+        Test creating a new backup job with missing start_time setting.
+        """
+        
+        data = {
+            'name': 'Teacher Backups',
+            'server': '192.168.11.52',
+            'port': 445,
+            'protocol': 1,
+            'location': '/teachers',
+            'start_date': 1,
+            'interval': 1
+        }
+
+        resp = self.app.post('/backups/new', data=data, follow_redirects=True)
+        assert resp.status_code == 200
+        assert Backup.query.count() == 0
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_missing_interval_setting(self):
         """ Test creating a new backup job with missing interval setting. """
@@ -263,14 +294,16 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The interval was not specified.' in resp.data
+        assert 'Not a valid choice' in resp.data
 
     def test_create_backup_with_name_length_below_minimum(self):
         """
@@ -281,9 +314,11 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': '',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -300,15 +335,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'X'*141,
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The name must be less than 140 characters.' in resp.data
+        assert 'Field must be between 1 and 140 characters long.' in resp.data
 
     def test_create_backup_with_port_number_below_minimum(self):
         """
@@ -320,14 +357,16 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 0,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'Invalid port number.' in resp.data
+        assert 'Number must be between 1 and 65536.' in resp.data
 
     def test_create_backup_with_port_number_above_maximum(self):
         """
@@ -339,14 +378,16 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 65536,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'Invalid port number.' in resp.data
+        assert 'Number must be between 1 and 65536.' in resp.data
 
     def test_create_backup_with_interval_below_minimum(self):
         """
@@ -358,15 +399,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
             'interval': 0
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The interval must be at least 1 hour.' in resp.data
+        assert 'Not a valid choice' in resp.data
 
     def test_create_backup_with_interval_above_maximum(self):
         """
@@ -380,15 +423,17 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 17532
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 4
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The interval must be less than 2 years.' in resp.data
+        assert 'Not a valid choice' in resp.data
 
 
 class EditBackupTestCase(BaseAuthenticatedTestCase):
@@ -401,7 +446,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
                                  port=445, protocol=Backup.PROTOCOL.SMB,
                                  location='F:/teachers',
-                                 start_time=datetime.datetime.now(),
+                                 start_time=1, 
+                                 start_day=Backup.DAY.SUNDAY,
                                  interval=24)
 
         db.session.add(self.new_backup)
@@ -423,9 +469,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
                              follow_redirects=True)
@@ -445,9 +493,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -468,15 +518,17 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
                              follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The server address was not specified.' in resp.data
+        assert 'This field is required' in resp.data
 
         backup = Backup.query.first()
         assert not backup.name == data['name']
@@ -491,9 +543,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -515,8 +569,10 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -531,6 +587,32 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         assert not backup.start_time == data['start_time']
         assert not backup.interval == data['interval']
 
+    def test_edit_backup_with_missing_start_date_setting(self):
+        """ Test editing a new backup job with missing start_date setting. """
+        
+        data = {
+            'name': 'Teacher Backups',
+            'server': '192.168.11.52',
+            'port': 445,
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'interval': 1
+        }
+
+        resp = self.app.post(self.edit_backup_url, data=data,
+                             follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'The start time was not specified.' in resp.data
+        
+        backup = Backup.query.first()
+        assert not backup.name == data['name']
+        assert not backup.server == data['server']
+        assert not backup.port == data['port']
+        assert not backup.protocol == data['protocol']
+        assert not backup.interval == data['interval']
+
+
     def test_edit_backup_with_missing_start_time_setting(self):
         """ Test editing a new backup job with missing start_time setting. """
         
@@ -538,8 +620,10 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -561,8 +645,10 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -586,9 +672,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': '',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -613,15 +701,17 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'X'*141,
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
                              follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The name must be less than 140 characters.' in resp.data
+        assert 'Field must be between 1 and 140 characters long.' in resp.data
         
         backup = Backup.query.first()
         assert not backup.name == data['name']
@@ -641,9 +731,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 0,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
                              follow_redirects=True)
@@ -668,9 +760,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 65536,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 24
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
                              follow_redirects=True)
@@ -695,8 +789,10 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
             'interval': 0
         }
 
@@ -725,9 +821,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
             'port': 445,
-            'protocol': 'SMB',
-            'start_time': '1/21/14 01:04:00',
-            'interval': 17532
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_date': 1,
+            'interval': 4
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -754,7 +852,8 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
                                  port=445, protocol=Backup.PROTOCOL.SMB,
                                  location='F:/teachers',
-                                 start_time=datetime.datetime.now(),
+                                 start_time=1,
+                                 start_day=Backup.DAY.SUNDAY,
                                  interval=24)
 
         db.session.add(self.new_backup)
@@ -815,19 +914,22 @@ class ViewBackupTestCase(BaseAuthenticatedTestCase):
         new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/teachers',
-                              start_time=datetime.datetime.now(), interval=24)
+                              start_time=1, 
+                              start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_1)
 
         new_backup_2 = Backup(name='Students Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/students',
-                              start_time=datetime.datetime.now(), interval=24)
+                              start_time=1,
+                              start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_2)
 
         new_backup_3 = Backup(name='Admin Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/admin',
-                              start_time=datetime.datetime.now(), interval=24)
+                              start_time=1,
+                              start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_3)
 
         # Save changes to the database
@@ -854,7 +956,8 @@ class ViewBackupTestCase(BaseAuthenticatedTestCase):
         new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/teachers',
-                              start_time=datetime.datetime.now(), interval=24)
+                              start_time=1,
+                              start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_1)
 
         # Save changes to the database

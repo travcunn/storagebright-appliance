@@ -49,26 +49,49 @@ class Backup(db.Model):
         """ Enumeration of backup server protocols. """
         SMB = 1
 
+    class INTERVAL():
+        """ Enumeration of backup intervals. """
+        DAILY = 1
+        WEEKLY = 2
+        MONTHLY = 3
+
+    class DAY():
+        """ Enumeration of days of the week. """
+        SUNDAY = 1
+        MONDAY = 2
+        TUESDAY = 3
+        WEDNESDAY = 4
+        THURSDAY = 5
+        FRIDAY = 6
+        SATURDAY = 7
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
     server = db.Column(db.String(256))
     port = db.Column(db.Integer)
     protocol = db.Column(db.Integer)
     location = db.Column(db.String(512))
-    start_time = db.Column(db.DateTime)
-    # Interval in hours
+
+    # Start day of the week of the backup job
+    start_day = db.Column(db.Integer)
+    # Start time (hour of the day) of the backup job
+    start_time = db.Column(db.Integer)
+
+    # Interval based on INTERVAL enumeration
     interval = db.Column(db.Integer)
     last_backup = db.Column(db.DateTime)
+
     status = db.Column(db.Integer)
     error_message = db.Column(db.String(512))
 
-    def __init__(self, name, server, port, protocol, location, start_time,
-                 interval):
+    def __init__(self, name, server, port, protocol, location, start_day,
+                 start_time, interval):
         self.name = name
         self.server = server
         self.port = port
         self.protocol = protocol
         self.location = location
+        self.start_day = start_day
         self.start_time = start_time
         self.interval = interval
 

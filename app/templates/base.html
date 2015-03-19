@@ -22,6 +22,20 @@
 
     <div class="container">
 
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="page-header">
+          <div class="top-error">
+            {% for category, message in messages %}
+              <div class="alert alert-dismissable alert{% if category != 'message'%}-{{ category }}{% endif %}{% if category == 'message' %}-warning{% endif %}">
+                <strong class="top-error-text">{{ message }}</strong>
+              </div>
+            {% endfor %}
+          </div>
+          </div>
+        {% endif %}
+      {% endwith %}
+
       {% block content %}{% endblock %}
 
       <footer>

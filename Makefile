@@ -8,7 +8,7 @@ run:
 	python run.py
 
 test:
-	py.test --cov-report term-missing --cov app
+	py.test --cov-report term-missing --cov app -v
 
 install:
 	pip install -r requirements.txt

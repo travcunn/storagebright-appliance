@@ -15,5 +15,3 @@ login_manager.session_protection = "strong"
 
 
 from app import models, views
-
-app.jinja_env.globals['time_interval'] = views.time_interval

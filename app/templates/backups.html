@@ -62,7 +62,25 @@
       <tr>
         <td><a href="/backups/view/{{ backup.id }}">{{ backup.name }}</a></td>
         <td>{{ backup.server }} {{ backup.location }}</td>
-        <td>{{ time_interval(backup.interval) }} at {{ backup.start_time }}</td>
+        <td>
+            {% if backup.interval == 1 %}
+            Every day
+            {% elif backup.interval == 2 %}
+            Every week
+            {% elif backup.interval == 3 %}
+            Every month
+            {% endif %}
+            at {{ backup.start_time }}
+            {% if backup.start_time == 12 %}
+            PM
+            {% elif backup.start_time == 24 %}
+            AM
+            {% elif backup.start_time > 12 %}
+            PM
+            {% else %}
+            AM
+            {% endif %}
+        </td>
         <td>{{ backup.last_backup }}</td>
         <td class="text-center">
           {% if backup.status == 1 %}

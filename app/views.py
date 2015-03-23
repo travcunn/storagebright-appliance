@@ -102,31 +102,3 @@ def before_request():
 def load_user(user_id):
     """Returns a user, given a user id."""
     return User.query.get(int(user_id))
-
-
-@app.template_filter('time_interval')
-def time_interval(hours):
-    """
-    Returns string representing "time interval" e.g.
-    Every 3 days, Every 5 hours, etc...
-    """
-
-    delta = timedelta(hours=hours)
-
-    periods = (
-        (delta.days / 365, "year", "years"),
-        (delta.days / 30, "month", "months"),
-        (delta.days / 7, "week", "weeks"),
-        (delta.days, "day", "days"),
-        (delta.seconds / 3600, "hour", "hours"),
-        (delta.seconds / 60, "minute", "minutes"),
-        (delta.seconds, "second", "seconds"),
-    )
-
-    for period, singular, plural in periods:
-        if period:
-            if period == 1:
-                return "Every %s" % (singular,)
-            else:
-                return "Every %d %s" % \
-                    (period, singular if period == 1 else plural)

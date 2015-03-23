@@ -6701,3 +6701,9 @@ button.close {
 .panel-info .panel-title {
   color: #fff;
 }
+
+.vertical-center {
+  height: 100%;
+  width: 100%;
+  text-align: center; /* align the inline(-block) elements horizontally */
+}

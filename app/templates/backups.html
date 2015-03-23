@@ -44,9 +44,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 id="container">Backups</h1>
-</div>
+{% if all_backups %}
+    <div class="page-header">
+        <h1 id="container">Backups</h1>
+    </div>
+{% endif %}
 
 <div class="page-header">
   {% if all_backups %}
@@ -59,7 +61,7 @@
       {% for backup in all_backups %}
       <tr>
         <td><a href="/backups/view/{{ backup.id }}">{{ backup.name }}</a></td>
-        <td>{{ backup.server }} | {{ backup.location }}</td>
+        <td>{{ backup.server }} {{ backup.location }}</td>
         <td>{{ time_interval(backup.interval) }} at {{ backup.start_time }}</td>
         <td>{{ backup.last_backup }}</td>
         <td class="text-center">
@@ -81,9 +83,15 @@
         </td>
       </tr>
       {% endfor %}
-    
+   
     </tbody>
   </table>
+  {% else %}
+    <div class="jumbotron vertical-center">
+        <h1>Getting Started</h1>
+        <p>To get started, schedule a backup task.</p>
+        <p><a class="btn btn-success btn-lg" href="/backups/new">Add New Backup</a></p>
+    </div>
   {% endif %}
 </div> <!-- end page-header -->
 

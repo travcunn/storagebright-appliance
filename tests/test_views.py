@@ -168,7 +168,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -184,7 +184,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -202,7 +202,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -220,7 +220,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -238,14 +238,14 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'This field is required' in resp.data
+        assert 'Not a valid choice' in resp.data
 
     def test_create_backup_with_missing_start_time_setting(self):
         """
@@ -258,16 +258,16 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'This field is required' in resp.data
+        assert 'Not a valid choice' in resp.data
 
-    def test_create_backup_with_missing_start_date_setting(self):
+    def test_create_backup_with_missing_start_day_setting(self):
         """
         Test creating a new backup job with missing start_time setting.
         """
@@ -278,14 +278,14 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'This field is required' in resp.data
+        assert 'Not a valid choice' in resp.data
 
     def test_create_backup_with_missing_interval_setting(self):
         """ Test creating a new backup job with missing interval setting. """
@@ -297,7 +297,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -317,14 +317,14 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'The name must contain at least 1 characters.' in resp.data
+        assert 'This field is required.' in resp.data
 
     def test_create_backup_with_name_length_above_maximum(self):
         """
@@ -338,7 +338,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -360,13 +360,13 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert Backup.query.count() == 0
-        assert 'Number must be between 1 and 65536.' in resp.data
+        assert 'This field is required' in resp.data
 
     def test_create_backup_with_port_number_above_maximum(self):
         """
@@ -377,11 +377,11 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
-            'port': 65536,
+            'port': 65537,
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -402,7 +402,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 0
         }
 
@@ -426,7 +426,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 4
         }
 
@@ -472,7 +472,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -496,7 +496,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -521,7 +521,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -546,7 +546,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -571,7 +571,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -587,8 +587,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         assert not backup.start_time == data['start_time']
         assert not backup.interval == data['interval']
 
-    def test_edit_backup_with_missing_start_date_setting(self):
-        """ Test editing a new backup job with missing start_date setting. """
+    def test_edit_backup_with_missing_start_day_setting(self):
+        """ Test editing a new backup job with missing start_day setting. """
         
         data = {
             'name': 'Teacher Backups',
@@ -622,7 +622,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -648,7 +648,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -675,7 +675,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -704,7 +704,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
 
@@ -734,7 +734,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -759,11 +759,11 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         data = {
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
-            'port': 65536,
+            'port': 65537,
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 1
         }
         resp = self.app.post(self.edit_backup_url, data=data,
@@ -792,7 +792,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 0
         }
 
@@ -824,7 +824,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'protocol': 1,
             'location': '/teachers',
             'start_time': 1,
-            'start_date': 1,
+            'start_day': 1,
             'interval': 4
         }
 

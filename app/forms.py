@@ -51,6 +51,13 @@ class BackupForm(Form):
                            coerce=int)
 
 
+class DeleteBackupForm(Form):
+    """
+    Form for deleting a backup.
+    """
+    pass
+
+
 class LoginForm(Form):
     """
     Login form and its fields.

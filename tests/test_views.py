@@ -846,7 +846,7 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
     """ Test deleting backup jobs. """
 
     def setUp(self):
-        super(EditBackupTestCase, self).setUp()
+        super(DeleteBackupTestCase, self).setUp()
 
         # New Backup object for each test
         self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
@@ -860,10 +860,10 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         db.session.commit()
 
         # URL for deleting the newly created Backup object
-        self.edit_backup_url = "/backups/delete/{}".format(self.new_backup.id)
+        self.delete_backup_url = "/backups/delete/{}".format(self.new_backup.id)
 
     def tearDown(self):
-        super(EditBackupTestCase, self).tearDown()
+        super(DeleteBackupTestCase, self).tearDown()
 
         Backup.query.delete()
         db.session.commit()
@@ -877,7 +877,7 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
 
         resp = self.app.post(self.delete_backup_url, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Backup was deleted successfully.' in resp.data
+        assert 'Backup task was deleted successfully.' in resp.data
 
         assert not Backup.query.count()
 

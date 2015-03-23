@@ -8,7 +8,7 @@ from flask.ext.login import current_user, login_required, login_user, \
 from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
-from app.forms import BackupForm, LoginChecker, LoginForm
+from app.forms import BackupForm, DeleteBackupForm, LoginChecker, LoginForm
 from app.models import Backup, User
 
 
@@ -54,6 +54,24 @@ def new_backup():
         return redirect(url_for('index'))
 
     return render_template('new-backup.html', title='New Backup',
+                           form=form)
+
+
+@app.route('/backups/delete/<backup_id>', methods=['GET', 'POST'])
+@login_required
+def delete_backup(backup_id):
+    """Route for the delete backup page."""
+
+    form = DeleteBackupForm(request.form)
+
+    if form.validate_on_submit():
+        Backup.query.filter(Backup.id==backup_id).delete()
+        db.session.commit()
+
+        flash("Backup task was deleted successfully.", "success")
+        return redirect(url_for('index'))
+
+    return render_template('delete-backup.html', title='Delete Backup',
                            form=form)
 
 

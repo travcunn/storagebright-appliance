@@ -50,7 +50,7 @@ def new_backup():
         db.session.add(new_backup)
         db.session.commit()
 
-        flash("Backup task was created successfully.", "success")
+        flash("Backup job was created successfully.", "success")
         return redirect(url_for('index'))
 
     return render_template('new-backup.html', title='New Backup',
@@ -68,7 +68,7 @@ def delete_backup(backup_id):
         Backup.query.filter(Backup.id==backup_id).delete()
         db.session.commit()
 
-        flash("Backup task was deleted successfully.", "success")
+        flash("Backup job was deleted successfully.", "success")
         return redirect(url_for('index'))
 
     return render_template('delete-backup.html', title='Delete Backup',

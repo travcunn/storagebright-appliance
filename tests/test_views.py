@@ -873,11 +873,11 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
 
         resp = self.app.get(self.delete_backup_url, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Are you sure you want to delete this backup?' in resp.data
+        assert 'Delete Forever' in resp.data
 
         resp = self.app.post(self.delete_backup_url, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Backup task was deleted successfully.' in resp.data
+        assert 'Backup job was deleted successfully.' in resp.data
 
         assert not Backup.query.count()
 
@@ -947,7 +947,7 @@ class ViewBackupTestCase(BaseAuthenticatedTestCase):
 
         resp = self.app.get('/backups', follow_redirects=True)
         assert resp.status_code == 200
-        assert 'To get started, schedule a backup task.' in resp.data
+        assert 'To get started, schedule a backup job.' in resp.data
 
     def test_view_single_backup(self):
         """ Test viewing a single backup. """

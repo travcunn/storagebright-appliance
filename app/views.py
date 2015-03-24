@@ -62,10 +62,12 @@ def new_backup():
 def edit_backup(backup_id):
     """Route for the edit single backup page."""
 
-    backup = Backup.query.filter(Backup.id==backup_id)
+    backup_query = Backup.query.filter(Backup.id==backup_id)
 
-    if backup.first() is None:
+    if backup_query.first() is None:
         return abort(404)
+
+    backup = backup_query.first()
 
     if request.method == "POST":
         form = BackupForm(request.form)

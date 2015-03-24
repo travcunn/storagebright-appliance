@@ -462,6 +462,18 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         Backup.query.delete()
         db.session.commit()
 
+    def test_edit_backup_default_fields(self):
+        """ Test the default field values when editing a backup. """
+        
+        resp = self.app.get(self.edit_backup_url, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'value="Teachers Backup"' in resp.data
+        assert 'value="winshare01"' in resp.data
+        assert 'value="445"' in resp.data
+        assert 'value="F:/teachers"' in resp.data
+        assert 'value="1"' in resp.data
+        assert 'value="24"' in resp.data
+
     def test_edit_backup_with_valid_settings(self):
         """ Test editing a backup job with valid settings. """
         

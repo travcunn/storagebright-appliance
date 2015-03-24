@@ -60,7 +60,7 @@
 
       {% for backup in all_backups %}
       <tr>
-        <td><a href="/backups/view/{{ backup.id }}">{{ backup.name }}</a></td>
+        <td><a href="/backups/edit/{{ backup.id }}">{{ backup.name }}</a></td>
         <td>{{ backup.server }} {{ backup.location }}</td>
         <td>
             {% if backup.interval == 1 %}
@@ -114,7 +114,7 @@
         </td>
         <td class="rowlink-skip">
           <a href="#" class="btn btn-xs btn-success">Start Now</a>
-          <a href="#" class="btn btn-xs btn-primary">Edit</a>
+          <a href="/backups/edit/{{ backup.id }}" class="btn btn-xs btn-primary">Edit</a>
           <a href="#" class="btn btn-xs btn-warning">Disable</a>
           <a href="/backups/delete/{{ backup.id }}" class="btn btn-xs btn-danger">Delete</a>
         </td>

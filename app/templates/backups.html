@@ -70,15 +70,34 @@
             {% elif backup.interval == 3 %}
             Every month
             {% endif %}
-            at {{ backup.start_time }}
+            at 
             {% if backup.start_time == 12 %}
+            {{ backup.start_time }}
             PM
             {% elif backup.start_time == 24 %}
+            12
             AM
             {% elif backup.start_time > 12 %}
+            {{ backup.start_time - 12}}
             PM
             {% else %}
             AM
+            {% endif %}
+            on
+            {% if backup.start_day == 1 %}
+            Sunday
+            {% elif backup.start_day == 2 %}
+            Monday
+            {% elif backup.start_day == 3 %}
+            Tuesday
+            {% elif backup.start_day == 4 %}
+            Wednesday
+            {% elif backup.start_day == 5 %}
+            Thursday
+            {% elif backup.start_day == 6 %}
+            Friday
+            {% elif backup.start_day == 7 %}
+            Saturday
             {% endif %}
         </td>
         <td>{{ backup.last_backup }}</td>

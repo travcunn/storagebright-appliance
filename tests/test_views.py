@@ -464,7 +464,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
 
     def test_edit_backup_with_valid_settings(self):
         """ Test editing a backup job with valid settings. """
-       
+        
         data = {
             'name': 'Teacher Backups',
             'server': '192.168.11.52',
@@ -475,20 +475,30 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'start_day': 1,
             'interval': 1
         }
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
 
-        backup = Backup.query.first()
-        assert backup.name == data['name']
-        assert backup.server == data['server']
-        assert backup.port == data['port']
-        assert backup.protocol == data['protocol']
-        assert backup.start_time == data['start_time']
-        assert backup.interval == data['interval']
+    def test_edit_invalid_backup(self):
+        """
+        Test editing an invalid backup, or a backup job that doesn't exist.
+        """
+        
+        data = {
+            'name': 'Teacher Backups',
+            'server': '192.168.11.52',
+            'port': 445,
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_day': 1,
+            'interval': 1
+        }
+        resp = self.app.post('/backups/edit/12345', data=data,
+                             follow_redirects=True)
+        assert resp.status_code == 404
 
     def test_edit_backup_with_missing_name_setting(self):
-        """ Test editing a new backup job with missing name setting. """
+        """ Test editing a backup job with missing name setting. """
         
         data = {
             'server': '192.168.11.52',
@@ -500,45 +510,29 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
-        assert resp.status_code == 200
-        assert 'The backup name was not specified.' in resp.data
-
-        backup = Backup.query.first()
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
-
-    def test_edit_backup_with_missing_server_setting(self):
-        """ Test editing a new backup job with missing server setting. """
-        
-        data = {
-            'name': 'Teacher Backups',
-            'port': 445,
-            'protocol': 1,
-            'location': '/teachers',
-            'start_time': 1,
-            'start_day': 1,
-            'interval': 1
-        }
-
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert 'This field is required' in resp.data
 
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+    def test_edit_backup_with_missing_server_setting(self):
+        """ Test editing a backup job with missing server setting. """
+        
+        data = {
+            'name': 'Teacher Backups',
+            'port': 445,
+            'protocol': 1,
+            'location': '/teachers',
+            'start_time': 1,
+            'start_day': 1,
+            'interval': 1
+        }
+
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'This field is required' in resp.data
 
     def test_edit_backup_with_missing_port_setting(self):
-        """ Test editing a new backup job with missing port setting. """
+        """ Test editing a backup job with missing port setting. """
         
         data = {
             'name': 'Teacher Backups',
@@ -550,20 +544,12 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The server port was not specified.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+        assert 'This field is required' in resp.data
 
     def test_edit_backup_with_missing_protocol_setting(self):
-        """ Test editing a new backup job with missing protocol setting. """
+        """ Test editing a backup job with missing protocol setting. """
         
         data = {
             'name': 'Teacher Backups',
@@ -575,46 +561,14 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The server protocol was not specified.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
-
-    def test_edit_backup_with_missing_start_day_setting(self):
-        """ Test editing a new backup job with missing start_day setting. """
-        
-        data = {
-            'name': 'Teacher Backups',
-            'server': '192.168.11.52',
-            'port': 445,
-            'protocol': 1,
-            'location': '/teachers',
-            'start_time': 1,
-            'interval': 1
-        }
-
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
-        assert resp.status_code == 200
-        assert 'The start time was not specified.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.interval == data['interval']
-
+        assert 'Not a valid choice' in resp.data
 
     def test_edit_backup_with_missing_start_time_setting(self):
-        """ Test editing a new backup job with missing start_time setting. """
+        """
+        Test editing a backup job with missing start_time setting.
+        """
         
         data = {
             'name': 'Teacher Backups',
@@ -626,20 +580,31 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The start time was not specified.' in resp.data
+        assert 'Not a valid choice' in resp.data
+
+    def test_edit_backup_with_missing_start_day_setting(self):
+        """
+        Test editing a backup job with missing start_time setting.
+        """
         
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.interval == data['interval']
+        data = {
+            'name': 'Teacher Backups',
+            'server': '192.168.11.52',
+            'port': 445,
+            'protocol': 1,
+            'location': '/teachers',
+            'start_day': 1,
+            'interval': 1
+        }
+
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Not a valid choice' in resp.data
 
     def test_edit_backup_with_missing_interval_setting(self):
-        """ Test editing a new backup job with missing interval setting. """
+        """ Test editing a backup job with missing interval setting. """
         
         data = {
             'name': 'Teacher Backups',
@@ -651,21 +616,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'start_day': 1,
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The interval was not specified.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
+        assert 'Not a valid choice' in resp.data
 
     def test_edit_backup_with_name_length_below_minimum(self):
         """
-        Test editing a new backup job with name length below the minimum.
+        Test editing a backup job with name length below the minimum.
         """
         
         data = {
@@ -679,22 +636,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The name must contain at least 1 characters.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+        assert 'This field is required.' in resp.data
 
     def test_edit_backup_with_name_length_above_maximum(self):
         """
-        Test editing a new backup job with name length above the maximum.
+        Test editing a backup job with name length above the maximum.
         """
         
         data = {
@@ -708,22 +656,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 1
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
         assert 'Field must be between 1 and 140 characters long.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
 
     def test_edit_backup_with_port_number_below_minimum(self):
         """
-        Test editing a new backup job with a port number below the minimum
+        Test editing a backup job with a port number below the minimum
         allowed value.
         """
         
@@ -737,22 +676,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'start_day': 1,
             'interval': 1
         }
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Invalid port number.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+        assert 'This field is required' in resp.data
 
     def test_edit_backup_with_port_number_above_maximum(self):
         """
-        Test editing a new backup job with a port number above the maximum
+        Test editing a backup job with a port number above the maximum
         allowed value.
         """
         
@@ -766,22 +696,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'start_day': 1,
             'interval': 1
         }
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Invalid port number.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+        assert 'Number must be between 1 and 65536.' in resp.data
 
     def test_edit_backup_with_interval_below_minimum(self):
         """
-        Test editing a new backup job with an interval below the minimum
+        Test editing a backup job with an interval below the minimum
         allowed value.
         """
         
@@ -796,22 +717,13 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 0
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The interval must be at least 1 hour.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
+        assert 'Not a valid choice' in resp.data
 
     def test_edit_backup_with_interval_above_maximum(self):
         """
-        Test editing a new backup job with an interval above the maximum
+        Test editing a backup job with an interval above the maximum
         value.
         """
         
@@ -828,19 +740,10 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'interval': 4
         }
 
-        resp = self.app.post(self.edit_backup_url, data=data,
-                             follow_redirects=True)
+        resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
-        assert 'The interval must be less than 2 years.' in resp.data
-        
-        backup = Backup.query.first()
-        assert not backup.name == data['name']
-        assert not backup.server == data['server']
-        assert not backup.port == data['port']
-        assert not backup.protocol == data['protocol']
-        assert not backup.start_time == data['start_time']
-        assert not backup.interval == data['interval']
-
+        assert 'Not a valid choice' in resp.data
+    
 
 class DeleteBackupTestCase(BaseAuthenticatedTestCase):
     """ Test deleting backup jobs. """
@@ -895,14 +798,14 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         assert Backup.query.count() == 1
 
 
-class ViewBackupTestCase(BaseAuthenticatedTestCase):
-    """ Test viewing backup jobs. """
+class ListBackupTestCase(BaseAuthenticatedTestCase):
+    """ Test listing backup jobs. """
 
     def setUp(self):
-        super(ViewBackupTestCase, self).setUp()
+        super(ListBackupTestCase, self).setUp()
  
     def tearDown(self):
-        super(ViewBackupTestCase, self).tearDown()
+        super(ListBackupTestCase, self).tearDown()
 
         Backup.query.delete()
         db.session.commit()
@@ -948,30 +851,6 @@ class ViewBackupTestCase(BaseAuthenticatedTestCase):
         resp = self.app.get('/backups', follow_redirects=True)
         assert resp.status_code == 200
         assert 'To get started, schedule a backup job.' in resp.data
-
-    def test_view_single_backup(self):
-        """ Test viewing a single backup. """
-
-        # Create 3 backups
-        new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
-                              port=445, protocol=Backup.PROTOCOL.SMB,
-                              location='F:/teachers',
-                              start_time=1,
-                              start_day=Backup.DAY.SUNDAY, interval=24)
-        db.session.add(new_backup_1)
-
-        # Save changes to the database
-        db.session.commit()
-
-        view_url = '/backups/view/{}'.format(new_backup_1.id)
-
-        resp = self.app.get(view_url, follow_redirects=True)
-        assert resp.status_code == 200
-
-        for backup in Backup.query.all():
-            assert backup.name in resp.data
-            assert backup.location in resp.data
-            assert backup.last_backup in resp.data
 
 
 if __name__ == '__main__':

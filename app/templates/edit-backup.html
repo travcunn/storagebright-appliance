@@ -1,0 +1,153 @@
+<!-- import base html header -->
+{% extends "base.html" %}
+
+{% block topmenu %}
+<div class="container">
+  <div class="navbar-header">
+    <a href="/" class="navbar-brand">StorageBright Backup Appliance</a>
+    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+  <div class="navbar-collapse collapse" id="navbar-main">
+    <ul class="nav navbar-nav">
+
+      <li class="dropdown active">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Backup Jobs <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/backups">View All</a></li>
+            <li class="divider"></li>
+            <li><a href="/backups/new">Add New Backup Job</a></li>
+          </ul>
+      </li>
+
+      <li>
+        <a href="/restore">Restore</a>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">{{ g.user.email }} <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="download">
+          <li><a href="/account">Edit Account</a></li>
+          <li class="divider"></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 id="container">Edit Backup</h1>
+</div>
+
+<div class="row">
+<div class="col-lg-6">
+    <div class="well">
+        <form class="form-horizontal" method="post" action="">
+        {{ form.hidden_tag() }}
+
+        <fieldset>
+
+            <div class="form-group">
+            <label for="inputName" class="col-lg-3 control-label">Name</label>
+            <div class="col-lg-9">
+                {{ form.name(class="form-control", placeholder="Name", for="inputName", required="") }}
+                {% for error in form.name.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputServer" class="col-lg-3 control-label">Server</label>
+            <div class="col-lg-9">
+                {{ form.server(class="form-control", placeholder="Server", for="inputServer") }}
+                {% for error in form.server.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputProtocol" class="col-lg-3 control-label">Protocol</label>
+            <div class="col-lg-9">
+                {{ form.protocol(class="form-control", placeholder="Protocol", for="inputProtocol") }}
+                {% for error in form.protocol.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputPort" class="col-lg-3 control-label">Port</label>
+            <div class="col-lg-9">
+                {{ form.port(class="form-control", placeholder="Port", type="number", min=0, max=65536, for="inputPort") }}
+                {% for error in form.port.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputLocation" class="col-lg-3 control-label">Path</label>
+            <div class="col-lg-9">
+                {{ form.location(class="form-control", placeholder="Location", for="inputLocation") }}
+                {% for error in form.location.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+
+            <div class="form-group">
+            <label for="inputStartDay" class="col-lg-3 control-label">Start Day</label>
+            <div class="col-lg-9">
+                {{ form.start_day(class="form-control", placeholder="Start Day", for="inputStartDay") }}
+                {% for error in form.start_day.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputStartTime" class="col-lg-3 control-label">Start Time</label>
+            <div class="col-lg-9">
+                {{ form.start_time(class="form-control", placeholder="Start Time", for="inputStartTime", required="") }}
+                {% for error in form.start_time.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+             <div class="form-group">
+            <label for="inputFrequency" class="col-lg-3 control-label">Frequency</label>
+            <div class="col-lg-9">
+                {{ form.interval(class="form-control", placeholder="Frequency", for="inputFrequency", required="") }}
+                {% for error in form.interval.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <div class="col-lg-9 col-lg-offset-3">
+                <a href="/backups" class="btn btn-default">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+            </div>
+
+        </fieldset>
+        </form>
+    <div style="display: none;" id="source-button" class="btn btn-primary btn-xs">&lt; &gt;</div></div>
+    </div>
+</div>
+
+{% endblock %}

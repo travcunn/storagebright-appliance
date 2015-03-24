@@ -57,6 +57,49 @@ def new_backup():
                            form=form)
 
 
+@app.route('/backups/edit/<backup_id>', methods=['GET', 'POST'])
+@login_required
+def edit_backup(backup_id):
+    """Route for the edit single backup page."""
+
+    backup = Backup.query.filter(Backup.id==backup_id)
+
+    if backup.first() is None:
+        return abort(404)
+
+    if request.method == "POST":
+        form = BackupForm(request.form)
+    else:
+        form = BackupForm(name=backup.name, server=backup.server,
+                          port=backup.port, protocol=backup.protocol,
+                          location=backup.location, 
+                          start_time=backup.start_time,
+                          start_day=backup.start_day,
+                          interval=backup.interval)
+
+    if form.validate_on_submit():
+        # Modify the existing backup
+        backup.name = form.name.data
+        backup.server = form.server.data
+        backup.port = form.port.data
+        backup.protocol = form.protocol.data
+        backup.location = form.location.data
+        backup.start_time = form.start_time.data
+        backup.start_day = form.start_day.data
+        backup.interval = form.interval.data
+
+        # Save changes to the database
+        db.session.commit()
+
+        flash("Backup job was saved successfully.", "success")
+        return redirect(url_for('index'))
+
+    return render_template('edit-backup.html', title='Edit Backup',
+                           form=form)
+
+
+
+
 @app.route('/backups/delete/<backup_id>', methods=['GET', 'POST'])
 @login_required
 def delete_backup(backup_id):

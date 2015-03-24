@@ -886,10 +886,10 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
 
         assert Backup.query.count() == 1
 
-        resp = self.app.get(self.delete_backup_url, follow_redirects=True)
+        resp = self.app.get('/backups/delete/12345', follow_redirects=True)
         assert resp.status_code == 404
 
-        resp = self.app.post(self.delete_backup_url, follow_redirects=True)
+        resp = self.app.post('/backups/delete/12345', follow_redirects=True)
         assert resp.status_code == 404
         
         assert Backup.query.count() == 1

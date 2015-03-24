@@ -1,8 +1,8 @@
 from datetime import datetime
 from datetime import timedelta
 
-from flask import flash, g, redirect, render_template, request, session, \
-    url_for
+from flask import abort, flash, g, redirect, render_template, request,\
+        session, url_for
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
 from flask.ext.bcrypt import Bcrypt
@@ -62,10 +62,15 @@ def new_backup():
 def delete_backup(backup_id):
     """Route for the delete backup page."""
 
+    backup = Backup.query.filter(Backup.id==backup_id)
+
+    if backup.first() is None:
+        return abort(404)
+
     form = DeleteBackupForm(request.form)
 
     if form.validate_on_submit():
-        Backup.query.filter(Backup.id==backup_id).delete()
+        backup.delete()
         db.session.commit()
 
         flash("Backup job was deleted successfully.", "success")

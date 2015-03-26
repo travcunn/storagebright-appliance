@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import datetime
 
 from app import bcrypt
@@ -27,7 +28,7 @@ class User(db.Model):
 
     def get_id(self):
         """ Returns the id of a user. """
-        return unicode(self.id)
+        return self.id
 
     def __repr__(self):
         return '<User %r>' % (self.email)

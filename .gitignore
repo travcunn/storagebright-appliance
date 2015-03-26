@@ -13,3 +13,4 @@ nosetests.xml
 *.swp
 *.swo
 *~
+*.bak

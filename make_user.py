@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from app import db
 from app.models import User
 

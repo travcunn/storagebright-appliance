@@ -6,3 +6,5 @@ install:
   - make install
 script:
   - make test
+notifications:
+  slack: storagebright:ecosES85M1bFQnStxpdisj8G

@@ -3,9 +3,43 @@ import os
 
 import envoy
 
-
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
+
+
+class Job(object):
+    """
+    Provides a file system mount for a job that requires a connection to
+    a remote file system.
+    """
+
+    def __init__(self, backup, mount_fs, backup_wrapper):
+        """
+        backup (Backup object) - Backup object containing server credentials
+        mount_fs (AbstractMountFS type) - FS to mount
+        backup_wrapper (RdiffBackupWrapper) - rdiff-backup wrapper to use
+        """
+        self.backup = backup
+
+        # These should not be instantiated...
+        self.mount_fs = mount_fs
+        self.backup_wrapper = backup_wrapper
+
+        raise NotImplementedError("FS should be instantiated.")
+        raise NotImplementedError("Backup wrapper should be instantiated.")
+
+    def done(self):
+        raise NotImplementedError("FS should be unmounted.")
+
+
+class BackupJob(Job):
+    def run(self):
+        raise NotImplementedError("Run the backup job here.")
+
+
+class RestoreJob(Job):
+    def run(self):
+        raise NotImplementedError("Run the restore job here.")
 
 
 class RdiffBackupWrapper(object):

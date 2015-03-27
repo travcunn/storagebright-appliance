@@ -35,11 +35,13 @@ class Job(object):
 class BackupJob(Job):
     def run(self):
         raise NotImplementedError("Run the backup job here.")
+        self.done()
 
 
 class RestoreJob(Job):
     def run(self):
         raise NotImplementedError("Run the restore job here.")
+        self.done()
 
 
 class RdiffBackupWrapper(object):

@@ -5,6 +5,9 @@ Source code for the StorageBright backup appliance
 
 #### Dependencies
 - Python 2.7
+- pip
+- rdiff-backup
+- mount (with ability to mount CIFS shares)
 
 #### Installation
 ```

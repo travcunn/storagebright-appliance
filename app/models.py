@@ -69,22 +69,21 @@ class Backup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
 
+    enabled = db.Column(db.Boolean, default=True)
+
     server = db.Column(db.String(256))
     port = db.Column(db.Integer)
     protocol = db.Column(db.Integer)
     location = db.Column(db.String(512))
     username = db.Column(db.String(256))
     password = db.Column(db.String(256))
-
     # Start day of the week of the backup job
     start_day = db.Column(db.Integer)
     # Start time (hour of the day) of the backup job
     start_time = db.Column(db.Integer)
-
     # Interval based on INTERVAL enumeration
     interval = db.Column(db.Integer)
     last_backup = db.Column(db.DateTime)
-
     # Days to keep backups
     retention = db.Column(db.Integer)
 

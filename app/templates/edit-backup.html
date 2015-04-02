@@ -109,7 +109,7 @@
             <div class="form-group">
             <label for="inputPassword" class="col-lg-3 control-label">Password</label>
             <div class="col-lg-9">
-                {{ form.password(class="form-control", placeholder="Password", for="inputPassword", required="") }}
+                {{ form.password(class="form-control", placeholder="Password", for="inputPassword") }}
                 {% for error in form.password.errors %}
                     <div class="alert alert-danger" role="alert">{{ error }}</div>
                 {% endfor %}

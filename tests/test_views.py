@@ -897,6 +897,115 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         assert Backup.query.count() == 1
 
 
+class DisableBackupTestCase(BaseAuthenticatedTestCase):
+    """ Test disabling backup jobs. """
+
+    def setUp(self):
+        super(DisableBackupTestCase, self).setUp()
+
+        # New Backup object for each test
+        self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
+                                 port=445, protocol=Backup.PROTOCOL.SMB,
+                                 location='F:/teachers',
+                                 username='testuser', password='password',
+                                 start_time=1,
+                                 start_day=Backup.DAY.SUNDAY,
+                                 interval=24, retention=14)
+
+        db.session.add(self.new_backup)
+        db.session.commit()
+
+        # URL for disabling the newly created Backup object
+        self.disable_backup_url = "/backups/disable/{}".format(self.new_backup.id)
+
+    def tearDown(self):
+        super(DisableBackupTestCase, self).tearDown()
+
+        Backup.query.delete()
+        db.session.commit()
+
+    def test_disable_valid_backup(self):
+        """ Test disabling a valid backup. """
+
+        assert Backup.query.filter(Backup.id==self.new_backup.id).first().enabled
+
+        resp = self.app.get(self.disable_backup_url, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Disable Backup' in resp.data
+
+        resp = self.app.post(self.disable_backup_url, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Backup job was disabled successfully.' in resp.data
+
+        assert not Backup.query.filter(Backup.id==self.new_backup.id).first().enabled
+
+    def test_disabling_invalid_backup(self):
+        """ Test disabling an invalid backup. """
+
+        assert Backup.query.count() == 1
+
+        resp = self.app.get('/backups/disable/12345', follow_redirects=True)
+        assert resp.status_code == 404
+
+        resp = self.app.post('/backups/disable/12345', follow_redirects=True)
+        assert resp.status_code == 404
+        
+        assert Backup.query.count() == 1
+
+
+class EnableBackupTestCase(BaseAuthenticatedTestCase):
+    """ Test enabling backup jobs. """
+
+    def setUp(self):
+        super(EnableBackupTestCase, self).setUp()
+
+        # New Backup object for each test
+        self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
+                                 port=445, protocol=Backup.PROTOCOL.SMB,
+                                 location='F:/teachers',
+                                 username='testuser', password='password',
+                                 start_time=1,
+                                 start_day=Backup.DAY.SUNDAY,
+                                 interval=24, retention=14)
+        self.new_backup.enabled = False
+
+        db.session.add(self.new_backup)
+        db.session.commit()
+
+        # URL for disabling the newly created Backup object
+        self.enable_backup_url = "/backups/enable/{}".format(self.new_backup.id)
+
+    def tearDown(self):
+        super(EnableBackupTestCase, self).tearDown()
+
+        Backup.query.delete()
+        db.session.commit()
+
+    def test_enable_valid_backup(self):
+        """ Test enabling a valid backup. """
+
+        assert not Backup.query.filter(Backup.id==self.new_backup.id).first().enabled
+
+        resp = self.app.get(self.enable_backup_url, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Enable Backup' in resp.data
+
+        resp = self.app.post(self.enable_backup_url, follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Backup job was enabled successfully.' in resp.data
+
+        assert Backup.query.filter(Backup.id==self.new_backup.id).first().enabled
+
+    def test_disabling_invalid_backup(self):
+        """ Test disabling an invalid backup. """
+
+        resp = self.app.get('/backups/enable/12345', follow_redirects=True)
+        assert resp.status_code == 404
+
+        resp = self.app.post('/backups/enable/12345', follow_redirects=True)
+        assert resp.status_code == 404
+        
+
 class ListBackupTestCase(BaseAuthenticatedTestCase):
     """ Test listing backup jobs. """
 

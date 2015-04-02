@@ -6,7 +6,8 @@ from flask.ext.login import current_user, login_required, login_user, \
     logout_user
 
 from app import app, db, login_manager
-from app.forms import BackupForm, DeleteBackupForm, LoginChecker, LoginForm
+from app.forms import BackupForm, DeleteBackupForm, DisableBackupForm, \
+    EnableBackupForm, LoginChecker, LoginForm
 from app.models import Backup, User
 
 
@@ -91,7 +92,8 @@ def edit_backup(backup_id):
         backup.protocol = form.protocol.data
         backup.location = form.location.data
         backup.username = form.username.data
-        backup.password = form.password.data
+        if len(form.password.data) > 0:
+            backup.password = form.password.data
         backup.start_time = form.start_time.data
         backup.start_day = form.start_day.data
         backup.interval = form.interval.data
@@ -107,8 +109,6 @@ def edit_backup(backup_id):
                            form=form)
 
 
-
-
 @app.route('/backups/delete/<backup_id>', methods=['GET', 'POST'])
 @login_required
 def delete_backup(backup_id):
@@ -118,7 +118,7 @@ def delete_backup(backup_id):
 
     if backup.first() is None:
         return abort(404)
-
+    
     form = DeleteBackupForm(request.form)
 
     if form.validate_on_submit():
@@ -129,6 +129,56 @@ def delete_backup(backup_id):
         return redirect(url_for('index'))
 
     return render_template('delete-backup.html', title='Delete Backup',
+                           form=form)
+
+
+@app.route('/backups/disable/<backup_id>', methods=['GET', 'POST'])
+@login_required
+def disable_backup(backup_id):
+    """Route for the disable backup page."""
+
+    backup = Backup.query.filter(Backup.id==backup_id)
+
+    if backup.first() is None:
+        return abort(404)
+
+    backup = backup.first()
+
+    form = DisableBackupForm(request.form)
+
+    if form.validate_on_submit():
+        backup.enabled = False
+        db.session.commit()
+
+        flash("Backup job was disabled successfully.", "success")
+        return redirect(url_for('index'))
+
+    return render_template('disable-backup.html', title='Disable Backup',
+                           form=form)
+
+
+@app.route('/backups/enable/<backup_id>', methods=['GET', 'POST'])
+@login_required
+def enable_backup(backup_id):
+    """Route for the enable backup page."""
+
+    backup = Backup.query.filter(Backup.id==backup_id)
+
+    if backup.first() is None:
+        return abort(404)
+
+    backup = backup.first()
+
+    form = EnableBackupForm(request.form)
+
+    if form.validate_on_submit():
+        backup.enabled = True
+        db.session.commit()
+
+        flash("Backup job was enabled successfully.", "success")
+        return redirect(url_for('index'))
+
+    return render_template('enable-backup.html', title='Enable Backup',
                            form=form)
 
 

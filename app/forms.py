@@ -35,8 +35,7 @@ class BackupForm(Form):
                                        validators.Length(min=1, max=256)])
     
     password = PasswordField('password', 
-                             validators=[validators.DataRequired(),
-                                         validators.Length(min=1, max=256)])
+                             validators=[validators.Length(min=0, max=256)])
 
     start_day = SelectField(choices=[(1, 'Sunday'), (2, 'Monday'),
                                      (3, 'Tuesday'), (4, 'Wednesday'),
@@ -69,6 +68,20 @@ class BackupForm(Form):
 class DeleteBackupForm(Form):
     """
     Form for deleting a backup.
+    """
+    pass
+
+
+class DisableBackupForm(Form):
+    """
+    Form for disabling a backup.
+    """
+    pass
+
+
+class EnableBackupForm(Form):
+    """
+    Form for enabling a backup.
     """
     pass
 

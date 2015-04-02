@@ -97,6 +97,27 @@
             </div>
 
             <div class="form-group">
+            <label for="inputUsername" class="col-lg-3 control-label">Username</label>
+            <div class="col-lg-9">
+                {{ form.username(class="form-control", placeholder="Username", for="inputUsername", required="") }}
+                {% for error in form.username.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="inputPassword" class="col-lg-3 control-label">Password</label>
+            <div class="col-lg-9">
+                {{ form.password(class="form-control", placeholder="Password", for="inputPassword", required="") }}
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+
+            <div class="form-group">
             <label for="inputLocation" class="col-lg-3 control-label">Path</label>
             <div class="col-lg-9">
                 {{ form.location(class="form-control", placeholder="Location", for="inputLocation") }}

@@ -85,11 +85,14 @@ class Backup(db.Model):
     interval = db.Column(db.Integer)
     last_backup = db.Column(db.DateTime)
 
+    # Days to keep backups
+    retention = db.Column(db.Integer)
+
     status = db.Column(db.Integer)
     error_message = db.Column(db.String(512))
 
     def __init__(self, name, server, port, protocol, location, username,
-                 password, start_day, start_time, interval):
+                 password, start_day, start_time, interval, retention):
         self.name = name
 
         self.server = server
@@ -102,6 +105,7 @@ class Backup(db.Model):
         self.start_day = start_day
         self.start_time = start_time
         self.interval = interval
+        self.retention = retention
 
         # Default properties of a new Backup
         self.status = self.STATUS.NEVER_STARTED

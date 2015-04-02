@@ -1,12 +1,9 @@
 from __future__ import absolute_import
-from datetime import datetime
-from datetime import timedelta
 
 from flask import abort, flash, g, redirect, render_template, request,\
-        session, url_for
+    url_for
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
-from flask.ext.bcrypt import Bcrypt
 
 from app import app, db, login_manager
 from app.forms import BackupForm, DeleteBackupForm, LoginChecker, LoginForm
@@ -48,7 +45,8 @@ def new_backup():
                             password=form.password.data,
                             start_time=form.start_time.data,
                             start_day=form.start_day.data,
-                            interval=form.interval.data)
+                            interval=form.interval.data,
+                            retention=form.retention.data)
 
         db.session.add(new_backup)
         db.session.commit()
@@ -78,9 +76,12 @@ def edit_backup(backup_id):
         form = BackupForm(name=backup.name, server=backup.server,
                           port=backup.port, protocol=backup.protocol,
                           location=backup.location, 
+                          username=backup.username,
+                          password=backup.password,
                           start_time=backup.start_time,
                           start_day=backup.start_day,
-                          interval=backup.interval)
+                          interval=backup.interval,
+                          retention=backup.retention)
 
     if form.validate_on_submit():
         # Modify the existing backup
@@ -89,9 +90,12 @@ def edit_backup(backup_id):
         backup.port = form.port.data
         backup.protocol = form.protocol.data
         backup.location = form.location.data
+        backup.username = form.username.data
+        backup.password = form.password.data
         backup.start_time = form.start_time.data
         backup.start_day = form.start_day.data
         backup.interval = form.interval.data
+        backup.retention = form.retention.data
 
         # Save changes to the database
         db.session.commit()

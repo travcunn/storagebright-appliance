@@ -33,7 +33,8 @@ class BackupModelTestCase(BaseTestCase):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
                    username='testuser', password='testpassword',
-                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
+                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24,
+                   retention=14)
         b.failed("Something has gone wrong.")
         assert not b.last_backup
         assert b.status == Backup.STATUS.ERROR
@@ -43,7 +44,8 @@ class BackupModelTestCase(BaseTestCase):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
                    username='testuser', password='testpassword',
-                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
+                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24,
+                   retention=14)
         b.finished()
         assert b.last_backup
         assert b.status == Backup.STATUS.FINISHED
@@ -53,7 +55,8 @@ class BackupModelTestCase(BaseTestCase):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
                    username='testuser', password='testpassword',
-                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
+                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24,
+                   retention=24)
         b.started()
         assert b.status == Backup.STATUS.RUNNING
         assert b.error_message == ''
@@ -62,7 +65,8 @@ class BackupModelTestCase(BaseTestCase):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
                    username='testuser', password='testpassword',
-                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
+                   start_time=1, start_day=Backup.DAY.SUNDAY, interval=24,
+                   retention=24)
         assert b.status == Backup.STATUS.NEVER_STARTED
         assert b.error_message == ''
 

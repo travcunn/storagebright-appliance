@@ -56,9 +56,14 @@ class BackupForm(Form):
                                       (22, '10 PM'), (23, '11 PM'),
                                       (24, '12 AM')],
                              coerce=int)
+    
     interval = SelectField(choices=[(1, 'Daily'), (2, 'Weekly'),
                                     (3, 'Monthly')],
                            coerce=int)
+
+    retention = IntegerField('Data Retention (days)', 
+                    validators=[validators.DataRequired(),
+                                validators.NumberRange(min=1, max=10957)])
 
 
 class DeleteBackupForm(Form):

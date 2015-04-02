@@ -168,7 +168,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -186,7 +187,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -206,7 +208,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -226,7 +229,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -246,7 +250,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -268,7 +273,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'username': 'testuser',
             'password': 'testpass',
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -290,7 +296,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'username': 'testuser',
             'password': 'testpass',
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -311,6 +318,7 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -333,7 +341,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -356,7 +365,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -380,7 +390,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -403,7 +414,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -426,7 +438,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 0
+            'interval': 0,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -452,7 +465,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 4
+            'interval': 4,
+            'retention': 14,
         }
 
         resp = self.app.post('/backups/new', data=data, follow_redirects=True)
@@ -474,7 +488,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
                                  username='testuser', password='password',
                                  start_time=1, 
                                  start_day=Backup.DAY.SUNDAY,
-                                 interval=24)
+                                 interval=24, retention=14)
 
         db.session.add(self.new_backup)
         db.session.commit()
@@ -499,6 +513,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         assert 'value="F:/teachers"' in resp.data
         assert 'value="1"' in resp.data
         assert 'value="24"' in resp.data
+        assert 'value="14"' in resp.data
 
     def test_edit_backup_with_valid_settings(self):
         """ Test editing a backup job with valid settings. """
@@ -513,7 +528,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -533,7 +549,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post('/backups/edit/12345', data=data,
                              follow_redirects=True)
@@ -551,7 +568,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -570,7 +588,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -589,7 +608,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -608,7 +628,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -629,7 +650,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'username': 'testuser',
             'password': 'testpass',
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -650,7 +672,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'username': 'testuser',
             'password': 'testpass',
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -670,6 +693,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -691,7 +715,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -713,7 +738,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -736,7 +762,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -758,7 +785,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 1
+            'interval': 1,
+            'retention': 14,
         }
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
         assert resp.status_code == 200
@@ -780,7 +808,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 0
+            'interval': 0,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -805,7 +834,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
-            'interval': 4
+            'interval': 4,
+            'retention': 14,
         }
 
         resp = self.app.post(self.edit_backup_url, data=data, follow_redirects=True)
@@ -826,7 +856,7 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
                                  username='testuser', password='password',
                                  start_time=1,
                                  start_day=Backup.DAY.SUNDAY,
-                                 interval=24)
+                                 interval=24, retention=14)
 
         db.session.add(self.new_backup)
         db.session.commit()
@@ -888,7 +918,8 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
                               location='F:/teachers',
                               username='testuser', password='password',
                               start_time=1, 
-                              start_day=Backup.DAY.SUNDAY, interval=24)
+                              start_day=Backup.DAY.SUNDAY, interval=24,
+                              retention=14)
         db.session.add(new_backup_1)
 
         new_backup_2 = Backup(name='Students Backup', server='winshare01', 
@@ -896,7 +927,8 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
                               location='F:/students',
                               username='testuser', password='password',
                               start_time=1,
-                              start_day=Backup.DAY.SUNDAY, interval=24)
+                              start_day=Backup.DAY.SUNDAY, interval=24,
+                              retention=14)
         db.session.add(new_backup_2)
 
         new_backup_3 = Backup(name='Admin Backup', server='winshare01', 
@@ -904,7 +936,8 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
                               location='F:/admin',
                               username='testuser', password='password',
                               start_time=1,
-                              start_day=Backup.DAY.SUNDAY, interval=24)
+                              start_day=Backup.DAY.SUNDAY, interval=24,
+                              retention=14)
         db.session.add(new_backup_3)
 
         # Save changes to the database

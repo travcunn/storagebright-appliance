@@ -68,10 +68,13 @@ class Backup(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
+
     server = db.Column(db.String(256))
     port = db.Column(db.Integer)
     protocol = db.Column(db.Integer)
     location = db.Column(db.String(512))
+    username = db.Column(db.String(256))
+    password = db.Column(db.String(256))
 
     # Start day of the week of the backup job
     start_day = db.Column(db.Integer)
@@ -85,13 +88,17 @@ class Backup(db.Model):
     status = db.Column(db.Integer)
     error_message = db.Column(db.String(512))
 
-    def __init__(self, name, server, port, protocol, location, start_day,
-                 start_time, interval):
+    def __init__(self, name, server, port, protocol, location, username,
+                 password, start_day, start_time, interval):
         self.name = name
+
         self.server = server
         self.port = port
         self.protocol = protocol
         self.location = location
+        self.username = username
+        self.password = password
+
         self.start_day = start_day
         self.start_time = start_time
         self.interval = interval

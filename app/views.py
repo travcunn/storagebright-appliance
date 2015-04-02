@@ -44,6 +44,8 @@ def new_backup():
         new_backup = Backup(name=form.name.data, server=form.server.data,
                             port=form.port.data, protocol=form.protocol.data,
                             location=form.location.data,
+                            username=form.username.data,
+                            password=form.password.data,
                             start_time=form.start_time.data,
                             start_day=form.start_day.data,
                             interval=form.interval.data)

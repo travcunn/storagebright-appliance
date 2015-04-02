@@ -1,4 +1,3 @@
-from datetime import datetime
 import os
 import tempfile
 import unittest
@@ -33,6 +32,7 @@ class BackupModelTestCase(BaseTestCase):
     def test_backup_failure(self):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
+                   username='testuser', password='testpassword',
                    start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
         b.failed("Something has gone wrong.")
         assert not b.last_backup
@@ -42,6 +42,7 @@ class BackupModelTestCase(BaseTestCase):
     def test_backup_finish_job(self):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
+                   username='testuser', password='testpassword',
                    start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
         b.finished()
         assert b.last_backup
@@ -51,6 +52,7 @@ class BackupModelTestCase(BaseTestCase):
     def test_backup_started(self):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
+                   username='testuser', password='testpassword',
                    start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
         b.started()
         assert b.status == Backup.STATUS.RUNNING
@@ -59,6 +61,7 @@ class BackupModelTestCase(BaseTestCase):
     def test_backup_never_started(self):
         b = Backup(name='Teachers Backup', server='winshare01', port=445,
                    protocol=Backup.PROTOCOL.SMB, location='F:/teachers',
+                   username='testuser', password='testpassword',
                    start_time=1, start_day=Backup.DAY.SUNDAY, interval=24)
         assert b.status == Backup.STATUS.NEVER_STARTED
         assert b.error_message == ''

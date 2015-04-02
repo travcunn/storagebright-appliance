@@ -25,8 +25,8 @@ class Job(object):
         self.mount_fs = mount_fs
         self.backup_wrapper = backup_wrapper
 
-        raise NotImplementedError("FS should be instantiated.")
-        raise NotImplementedError("Backup wrapper should be instantiated.")
+        raise NotImplementedError("FS should be instantiated here.")
+        raise NotImplementedError("Backup should be instantiated here.")
 
     def done(self):
         raise NotImplementedError("FS should be unmounted.")

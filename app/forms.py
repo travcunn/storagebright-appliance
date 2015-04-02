@@ -29,6 +29,15 @@ class BackupForm(Form):
     location = StringField('location', 
                            validators=[validators.DataRequired(),
                                        validators.Length(min=1, max=512)])
+
+    username = StringField('username', 
+                           validators=[validators.DataRequired(),
+                                       validators.Length(min=1, max=256)])
+    
+    password = PasswordField('password', 
+                             validators=[validators.DataRequired(),
+                                         validators.Length(min=1, max=256)])
+
     start_day = SelectField(choices=[(1, 'Sunday'), (2, 'Monday'),
                                      (3, 'Tuesday'), (4, 'Wednesday'),
                                      (5, 'Thursday'), (6, 'Friday'),

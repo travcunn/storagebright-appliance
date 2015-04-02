@@ -45,9 +45,6 @@ class BaseTestCase(unittest.TestCase):
 class BaseLoginTestCase(BaseTestCase):
     """ Abstract test case for login testing. """
 
-    def __init__(self, *args, **kwargs):
-        super(BaseLoginTestCase, self).__init__(*args, **kwargs)
-
     def login(self, email, password):
         """ Login to the app. """
 
@@ -167,6 +164,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -183,6 +182,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -201,6 +202,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -219,6 +222,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'server': '192.168.11.52',
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -237,6 +242,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'server': '192.168.11.52',
             'port': 445,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -258,6 +265,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_day': 1,
             'interval': 1
         }
@@ -278,6 +287,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_day': 1,
             'interval': 1
         }
@@ -296,6 +307,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
         }
@@ -316,6 +329,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -337,6 +352,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -359,6 +376,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 0,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -380,6 +399,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 65537,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -401,6 +422,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 0
@@ -425,6 +448,8 @@ class CreateBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 4
@@ -446,6 +471,7 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
         self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
                                  port=445, protocol=Backup.PROTOCOL.SMB,
                                  location='F:/teachers',
+                                 username='testuser', password='password',
                                  start_time=1, 
                                  start_day=Backup.DAY.SUNDAY,
                                  interval=24)
@@ -483,6 +509,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -501,6 +529,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -517,6 +547,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -534,6 +566,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -551,6 +585,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'server': '192.168.11.52',
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -568,6 +604,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'server': '192.168.11.52',
             'port': 445,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -588,6 +626,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_day': 1,
             'interval': 1
         }
@@ -607,6 +647,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_day': 1,
             'interval': 1
         }
@@ -624,6 +666,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
         }
@@ -643,6 +687,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -663,6 +709,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -684,6 +732,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 0,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -704,6 +754,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 65537,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 1
@@ -724,6 +776,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 0
@@ -747,6 +801,8 @@ class EditBackupTestCase(BaseAuthenticatedTestCase):
             'port': 445,
             'protocol': 1,
             'location': '/teachers',
+            'username': 'testuser',
+            'password': 'testpass',
             'start_time': 1,
             'start_day': 1,
             'interval': 4
@@ -767,6 +823,7 @@ class DeleteBackupTestCase(BaseAuthenticatedTestCase):
         self.new_backup = Backup(name='Teachers Backup', server='winshare01', 
                                  port=445, protocol=Backup.PROTOCOL.SMB,
                                  location='F:/teachers',
+                                 username='testuser', password='password',
                                  start_time=1,
                                  start_day=Backup.DAY.SUNDAY,
                                  interval=24)
@@ -815,7 +872,7 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
 
     def setUp(self):
         super(ListBackupTestCase, self).setUp()
- 
+
     def tearDown(self):
         super(ListBackupTestCase, self).tearDown()
 
@@ -829,6 +886,7 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
         new_backup_1 = Backup(name='Teachers Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/teachers',
+                              username='testuser', password='password',
                               start_time=1, 
                               start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_1)
@@ -836,6 +894,7 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
         new_backup_2 = Backup(name='Students Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/students',
+                              username='testuser', password='password',
                               start_time=1,
                               start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_2)
@@ -843,6 +902,7 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
         new_backup_3 = Backup(name='Admin Backup', server='winshare01', 
                               port=445, protocol=Backup.PROTOCOL.SMB,
                               location='F:/admin',
+                              username='testuser', password='password',
                               start_time=1,
                               start_day=Backup.DAY.SUNDAY, interval=24)
         db.session.add(new_backup_3)

@@ -65,6 +65,16 @@ class BackupForm(Form):
                                 validators.NumberRange(min=1, max=10957)])
 
 
+class EditPasswordForm(Form):
+    """
+    Form for editing an account password.
+    """
+    password = PasswordField('password',
+                             validators=[validators.DataRequired()])
+    repeat_password = PasswordField('repeat_password',
+                                    validators=[validators.DataRequired()])
+
+
 class DeleteBackupForm(Form):
     """
     Form for deleting a backup.

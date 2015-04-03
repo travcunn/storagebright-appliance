@@ -1067,5 +1067,49 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
         assert 'To get started, schedule a backup job.' in resp.data
 
 
+class EditAccountTestCase(BaseAuthenticatedTestCase):
+    """ Test editing a user account. """
+
+    def test_edit_password(self):
+        """ Test editing a password with matching passwords. """
+        
+        data = {
+            'password': 'testpassword',
+            'repeat_password': 'testpassword',
+        }
+        resp = self.app.post('/account/edit', data=data,
+                             follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Password was saved successfully.' in resp.data
+
+        # Attempt login with new credentials
+        self.logout()
+        self.login('vader@deathstar.com', 'testpassword')
+        assert resp.status_code == 200
+        assert 'Invalid Login' not in resp.data
+
+    def test_edit_password_no_match(self):
+        """
+        Test editing a password without matching passwords.
+        
+        The password should not change.
+        """
+        
+        data = {
+            'password': 'testpassword',
+            'repeat_password': 'prowssaptset',
+        }
+        resp = self.app.post('/account/edit', data=data,
+                             follow_redirects=True)
+        assert resp.status_code == 200
+        assert 'Passwords do not match.' in resp.data
+
+        # Attempt login with old credentials
+        self.logout()
+        self.login('vader@deathstar.com', 'noarms')
+        assert resp.status_code == 200
+        assert 'Invalid Login' not in resp.data
+
+
 if __name__ == '__main__':
     unittest.main()

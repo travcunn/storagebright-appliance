@@ -1,8 +1,9 @@
 from __future__ import absolute_import
-from flask.ext.wtf import Form
-from wtforms import BooleanField, IntegerField, PasswordField, SelectField, \
-    StringField, validators
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.wtf import Form
+from wtforms import BooleanField, IntegerField, PasswordField, SelectField,\
+    StringField, validators
+from wtforms.fields.html5 import EmailField
 
 from app import app, db
 from app.models import User
@@ -65,10 +66,11 @@ class BackupForm(Form):
                                 validators.NumberRange(min=1, max=10957)])
 
 
-class EditPasswordForm(Form):
+class EditAccountForm(Form):
     """
-    Form for editing an account password.
+    Form for editing an account.
     """
+    email = EmailField('email', validators=[validators.DataRequired()])
     password = PasswordField('password',
                              validators=[validators.DataRequired()])
     repeat_password = PasswordField('repeat_password',
@@ -100,7 +102,7 @@ class LoginForm(Form):
     """
     Login form and its fields.
     """
-    email = StringField('email', validators=[validators.DataRequired()])
+    email = EmailField('email', validators=[validators.DataRequired()])
     password = PasswordField('password',
                              validators=[validators.DataRequired()])
     remember_me = BooleanField('remember_me', default=False)

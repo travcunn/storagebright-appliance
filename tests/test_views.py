@@ -1070,32 +1070,34 @@ class ListBackupTestCase(BaseAuthenticatedTestCase):
 class EditAccountTestCase(BaseAuthenticatedTestCase):
     """ Test editing a user account. """
 
-    def test_edit_password(self):
-        """ Test editing a password with matching passwords. """
+    def test_edit_account_password(self):
+        """ Test editing an account with matching passwords. """
         
         data = {
+            'email': 'luke@skywalker.com',
             'password': 'testpassword',
             'repeat_password': 'testpassword',
         }
         resp = self.app.post('/account/edit', data=data,
                              follow_redirects=True)
         assert resp.status_code == 200
-        assert 'Password was saved successfully.' in resp.data
+        assert 'Your account was saved successfully.' in resp.data
 
         # Attempt login with new credentials
         self.logout()
-        self.login('vader@deathstar.com', 'testpassword')
+        self.login('luke@skywalker.com', 'testpassword')
         assert resp.status_code == 200
         assert 'Invalid Login' not in resp.data
 
     def test_edit_password_no_match(self):
         """
-        Test editing a password without matching passwords.
+        Test editing an account without matching passwords.
         
         The password should not change.
         """
         
         data = {
+            'email': 'luke@skywalker.com',
             'password': 'testpassword',
             'repeat_password': 'prowssaptset',
         }

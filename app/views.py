@@ -7,7 +7,7 @@ from flask.ext.login import current_user, login_required, login_user, \
 
 from app import app, db, login_manager
 from app.forms import BackupForm, DeleteBackupForm, DisableBackupForm, \
-    EditPasswordForm, EnableBackupForm, LoginChecker, LoginForm
+    EditAccountForm, EnableBackupForm, LoginChecker, LoginForm
 from app.models import Backup, User
 
 
@@ -188,21 +188,22 @@ def edit_account():
     """Route for the edit account page."""
 
     if request.method == "POST":
-        form = EditPasswordForm(request.form)
+        form = EditAccountForm(request.form)
     else:
-        form = EditPasswordForm()
+        form = EditAccountForm(email=g.user.email)
 
     if form.validate_on_submit():
         if form.password.data != form.repeat_password.data:
             flash("Passwords do not match.", "danger")
             return redirect(url_for('edit_account'))
 
-        # Modify the existing backup
+        # Modify the user
         g.user.set_password(form.password.data)
+        g.user.email = form.email.data
         # Save changes to the database
         db.session.commit()
 
-        flash("Password was saved successfully.", "success")
+        flash("Your account was saved successfully.", "success")
         return redirect(url_for('index'))
 
     return render_template('edit-account.html', title='Edit Account',

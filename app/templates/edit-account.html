@@ -14,7 +14,7 @@
   <div class="navbar-collapse collapse" id="navbar-main">
     <ul class="nav navbar-nav">
 
-      <li class="dropdown active">
+      <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Backup Jobs <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="/backups">View All</a></li>
@@ -55,6 +55,16 @@
         {{ form.hidden_tag() }}
 
         <fieldset>
+
+            <div class="form-group">
+            <label for="inputEmail" class="col-lg-3 control-label">Email</label>
+            <div class="col-lg-9">
+                {{ form.email(class="form-control", placeholder="Email", for="inputEmail") }}
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
 
             <div class="form-group">
             <label for="inputPassword" class="col-lg-3 control-label">Password</label>

@@ -71,10 +71,12 @@ class BackupJob(Job):
         try:
             self.backup_job.backup()
         except Exception as e:
+            print(e)
             self.backup.failed(e)
+            db.session.commit()
         else:
             self.done()
-        db.session.commit()
+            db.session.commit()
 
 
 class RestoreJob(Job):

@@ -114,12 +114,14 @@ class Backup(db.Model):
 
     def finished(self):
         """ Called when a backup has finished successfully. """
+        self.start_now = False
         self.last_backup = datetime.datetime.now()
         self.status = self.STATUS.FINISHED
         self.error_message = ''
 
     def failed(self, error_message):
         """ Called when a backup has failed. """
+        self.start_now = False
         self.status = self.STATUS.ERROR
         self.error_message = error_message
 

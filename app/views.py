@@ -7,7 +7,8 @@ from flask.ext.login import current_user, login_required, login_user, \
 
 from app import app, db, login_manager
 from app.forms import BackupForm, DeleteBackupForm, DisableBackupForm, \
-    EditAccountForm, EnableBackupForm, LoginChecker, LoginForm
+    EditAccountForm, EnableBackupForm, LoginChecker, LoginForm, \
+    StartBackupForm
 from app.models import Backup, User
 
 
@@ -179,6 +180,39 @@ def enable_backup(backup_id):
         return redirect(url_for('index'))
 
     return render_template('enable-backup.html', title='Enable Backup',
+                           form=form)
+
+
+@app.route('/backups/start/<backup_id>', methods=['GET', 'POST'])
+@login_required
+def start_backup(backup_id):
+    """Route for the start backup page."""
+
+    backup = Backup.query.filter(Backup.id==backup_id)
+
+    if backup.first() is None:
+        return abort(404)
+
+    backup = backup.first()
+
+    form = StartBackupForm(request.form)
+
+    if form.validate_on_submit():
+        if backup.status == backup.STATUS.RUNNING:
+            flash("Backup job is already running.", "danger")
+            return redirect(url_for('index'))
+
+        if backup.enabled:
+            backup.start_now = True
+            db.session.commit()
+
+            flash("Backup job was scheduled to start.", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("Backup job is disabled and cannot start.", "danger")
+            return redirect(url_for('index'))
+
+    return render_template('start-backup.html', title='Start Backup',
                            form=form)
 
 

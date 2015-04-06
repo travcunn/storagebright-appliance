@@ -129,3 +129,10 @@ class LoginChecker(object):
     def lookup_user(self):
         """ Returns the user that is being validated. """
         return db.session.query(User).filter_by(email=self._email).first()
+
+
+class StartBackupForm(Form):
+    """
+    Form for starting a backup.
+    """
+    pass

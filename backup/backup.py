@@ -1,10 +1,20 @@
 import logging
 import os
+import random
+import string
 
 import envoy
 
+import sys
+sys.path.append("..")
+
+from app import db
+
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
+
+
+BACKUPS_DIR = '/var/backups'
 
 
 class Job(object):
@@ -21,25 +31,54 @@ class Job(object):
         """
         self.backup = backup
 
-        # These should not be instantiated...
-        self.mount_fs = mount_fs
-        self.backup_wrapper = backup_wrapper
+        # Setup temp space for the job
+        tmp_name = ''.join(random.choice(string.ascii_lowercase) \
+            for _ in range(12))
+        self.temp_dir = os.path.join('/tmp', tmp_name)
 
-        raise NotImplementedError("FS should be instantiated here.")
-        raise NotImplementedError("Backup should be instantiated here.")
+        # Mount the FS needed for hte job
+        self.fs = mount_fs(username=self.backup.username,
+                           password=self.backup.password,
+                           remote_addr=self.backup.server,
+                           remote_port=self.backup.port,
+                           remote_path=self.backup.location,
+                           local_path=self.temp_dir)
+        self.fs.mount()
 
+        # Get backup directory of the backup job
+        self.local_backup_path = os.path.join(BACKUPS_DIR,
+                                              str(self.backup.id))
+
+        # Create temp folders if they don't exist
+        if not os.exists(BACKUPS_DIR):
+            os.makedirs(BACKUPS_DIR)
+        if not os.exists(self.local_backup_path):
+            os.makedirs(self.local_backup_path)
+
+        # Create a new backup_job object
+        self.backup_job = backup_wrapper(remote_dir=self.temp_dir,
+                                         backup_dir=self.local_backup_path)
+        
     def done(self):
-        raise NotImplementedError("FS should be unmounted.")
+        self.backup.finished()
+        self.fs.unmount()
+        os.removedirs(self.temp_dir)
 
 
 class BackupJob(Job):
     def run(self):
-        raise NotImplementedError("Run the backup job here.")
-        self.done()
+        self.backup.started()
+        try:
+            self.backup_job.backup()
+        except Exception as e:
+            self.backup.failed(e)
+        else:
+            self.done()
+        db.session.commit()
 
 
 class RestoreJob(Job):
-    def run(self):
+    def run(self, path, time_format):
         raise NotImplementedError("Run the restore job here.")
         self.done()
 
@@ -70,8 +109,8 @@ class RdiffBackupWrapper(object):
 
         command = template.format(**arguments)
 
-        # Timeout of 4 days
-        r = envoy.run(command, timeout=345600)
+        # Timeout of 7 days
+        r = envoy.run(command, timeout=604800)
 
         LOGGER.debug("Backup command: {}".format(command))
         LOGGER.debug("Backup command stdout: {}".format(r.std_out))

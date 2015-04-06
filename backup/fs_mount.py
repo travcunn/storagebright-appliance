@@ -37,13 +37,14 @@ class CIFSMountFS(AbstractMountFS):
     CIFSMountFS for mounting CIFS remote file shares.
     """
 
-    def __init__(self, username, password, remote_addr, remote_path,
-                 local_path):
+    def __init__(self, username, password, remote_addr, remote_port,
+                 remote_path, local_path):
         super(CIFSMountFS, self).__init__()
 
         self.username = username
         self.password = password
         self.remote_addr = remote_addr
+        self.remote_port = remote_port
         self.remote_path = relpath(remote_path)
         self.local_path = local_path
 
@@ -52,12 +53,14 @@ class CIFSMountFS(AbstractMountFS):
 
         template = """mount -t cifs -o """ \
                    """'user={username},password={password}' """ \
-                   """'//{remote_addr}/{remote_path}' '{local_path}'"""
+                   """'//{remote_addr}:{remote_port}/{remote_path}' """ \
+                   """'{local_path}'"""
 
         arguments = {
             'username': self.username,
             'password': self.password,
             'remote_addr': self.remote_addr,
+            'remote_port': self.remote_port,
             'remote_path': self.remote_path,
             'local_path': self.local_path,
         }

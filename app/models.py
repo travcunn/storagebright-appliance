@@ -70,6 +70,8 @@ class Backup(db.Model):
     name = db.Column(db.String(140))
 
     enabled = db.Column(db.Boolean, default=True)
+    # True if the backup should start now
+    start_now = db.Column(db.Boolean, default=False)
 
     server = db.Column(db.String(256))
     port = db.Column(db.Integer)
@@ -123,9 +125,16 @@ class Backup(db.Model):
 
     def started(self):
         """ Called when a backup has started. """
+        self.start_now = False
         self.status = self.STATUS.RUNNING
         self.error_message = ''
 
+    @property
+    def should_start(self):
+        """ Returns True if the backup job should run now. """
+        if self.start_now:
+            return True
+        return False
 
     def __repr__(self):
         return '<Backup %r>' % (self.name)

@@ -1,27 +1,29 @@
-import sys
 import time
 
+import sys
+sys.path.append("..")
+
 from app.models import Backup
-from backup.backup import BackupJob, RdiffBackupWrapper
-from backup.fs_mount import CIFSMountFS
+from backup import BackupJob, RdiffBackupWrapper
+from fs_mount import CIFSMountFS
 
 
-def run(backup_id):
-    """ Runs backup jobs. """
+def run():
+    """ Runs all backup jobs. """
     while True:
         try:
-            backup = Backup.query.filter(Backup.id==backup_id).first()
+            backups = Backup.query.all()
         except:
-            time.sleep(60)
+            time.sleep(10)
             continue
 
-        if backup.should_run:
-            job = BackupJob(backup=backup, mount_fs=CIFSMountFS,
-                            backup_wrapper=RdiffBackupWrapper)
-            job.run()
+        for backup in backups:
+            if backup.should_run:
+                print("Running backup ID: {}".format(backup.id))
+                job = BackupJob(backup=backup, mount_fs=CIFSMountFS,
+                                backup_wrapper=RdiffBackupWrapper)
+                job.run()
 
-        time.sleep(60)
+        time.sleep(10)
 
-
-backup_id = int(sys.argv[1])
-run(backup_id=backup_id)
+run()

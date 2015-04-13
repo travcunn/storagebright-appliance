@@ -5,12 +5,20 @@ from flask import abort, flash, g, redirect, render_template, request,\
 from flask.ext.login import current_user, login_required, login_user, \
     logout_user
 
-from app import app, db, login_manager
+from app import app, db, login_manager, bcrypt
 from app.forms import BackupForm, DeleteBackupForm, DisableBackupForm, \
     EditAccountForm, EnableBackupForm, LoginChecker, LoginForm, \
     StartBackupForm
 from app.models import Backup, User
+import ldap
 
+
+class LDAPAuthException(Exception):
+    pass
+
+LDAP_HOST = 'LDAP://10.0.0.103'
+LDAP_DOMAIN = 'crunkcastle.com'
+LDAP_REQUIRED_GROUP = 'ou=IT Admins,dc=crunkcastle,dc=com'
 
 login_manager.login_view = 'login'
 
@@ -256,10 +264,38 @@ def login():
     if login_form.validate_on_submit():
         login_validator = LoginChecker(email=request.form.get('email'),
                                        password=request.form.get('password'))
+        
         if login_validator.is_valid:
             login_user(login_validator.lookup_user, remember=True)
             return redirect(url_for('backups'))
-        flash('Invalid Login', 'danger')
+        
+        else: 
+            username=request.form.get('email')
+            password=request.form.get('password')
+
+            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW) 
+            sess = ldap.initialize(LDAP_HOST) 
+            sess.set_option(ldap.OPT_REFERRALS, 0)
+            sess.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
+
+            try:
+                sess.bind_s("%s@" % username + LDAP_DOMAIN, password)
+                filter = "userPrincipalName=%s@crunkcastle.com" % username
+                search = sess.search_s(LDAP_REQUIRED_GROUP,ldap.SCOPE_SUBTREE,filter)
+                if search == []:
+                    raise LDAPAuthException('This user did not appear in the specified OU.')                
+                                    
+
+                hash = bcrypt.generate_password_hash(password)
+                u = User(email=username, 
+                         password=hash)
+
+                db.session.add(u) 
+                db.session.commit()
+                flash('User added to the database, please login again', 'info')
+                
+            except: 
+                flash('Invalid Login', 'danger')
 
     return render_template('login.html', title='Login', form=login_form)
     

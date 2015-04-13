@@ -102,7 +102,8 @@ class LoginForm(Form):
     """
     Login form and its fields.
     """
-    email = EmailField('email', validators=[validators.DataRequired()])
+    email = StringField('email', validators=[validators.DataRequired()])
+    #email = EmailField('email', validators=[validators.DataRequired()])
     password = PasswordField('password',
                              validators=[validators.DataRequired()])
     remember_me = BooleanField('remember_me', default=False)

@@ -41,7 +41,7 @@
           {% endif %}
           {% endwith %}
 
-          {{ form.email(class="form-control input-lg", placeholder="Email", type="email", required="") }}
+          {{ form.email(class="form-control input-lg", placeholder="Email/Username", type="username", required="") }}
           {% for error in form.email.errors %}
             <span class='invalid'>[{{ error }}]</span>
           {% endfor %}

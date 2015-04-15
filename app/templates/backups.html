@@ -130,6 +130,109 @@
    
     </tbody>
   </table>
+
+  <div class="row">
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1>Usage</h1>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-2">
+
+        <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Used Space</h3>
+        </div>
+        <div class="panel-body">
+            <h3>20 TB</h3>
+        </div>
+        </div>
+
+        <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Free Space</h3>
+        </div>
+        <div class="panel-body">
+            <h3>10 TB</h3>
+        </div>
+        </div>
+
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <!-- pie chart canvas element -->
+        <canvas id="countries" width="400" height="300"></canvas>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+
+        <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Backed Up Files</h3>
+        </div>
+        <div class="panel-body">
+            <h3>975604</h3>
+        </div>
+        </div>
+
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <!-- pie chart canvas element -->
+        <canvas id="buyers" width="400" height="275"></canvas>
+    </div> 
+  </div>
+ 
+  <div class="row">
+        <script>
+            // line chart data
+            var buyerData = {
+                labels : ["January","February","March","April"],
+                datasets : [
+                {
+                    fillColor : "rgba(3,60,115,0.4)",
+                    strokeColor : "#033C73",
+                    pointColor : "#fff",
+                    pointStrokeColor : "#9DB86D",
+                    data : [934444,940000,972430,975604]
+                }
+                ]
+            }
+            // get line chart canvas
+            var buyers = document.getElementById('buyers').getContext('2d');
+            // draw line chart
+            new Chart(buyers).Line(buyerData);
+            // pie chart data
+            var pieData = [
+                {
+                    value: 20,
+                    color:"#2FA4E7",
+                    label: "Used Storage (TB)"
+                },
+                {
+                    value : 10,
+                    color : "#73A839",
+                    label: "Free Space (TB)"
+                },
+            ];
+            // pie chart options
+            var pieOptions = {
+                 segmentShowStroke : true,
+                 animateRotate : true,
+                 animateScale : false
+            }
+            // get pie chart canvas
+            var countries= document.getElementById("countries").getContext("2d");
+            // draw pie chart
+            new Chart(countries).Pie(pieData, pieOptions);
+        </script>
+
+
+
+
+  </div>
+
+
   {% else %}
     <div class="jumbotron vertical-center">
         <h1>Getting Started</h1>
